@@ -1,15 +1,17 @@
 <template>
   <div id="app">
+    <Header />
     <Pics />
   </div>
 </template>
 
 <script>
 import Pics from "./components/Pics";
+import Header from "./components/layout/Header";
 
 export default {
   name: "App",
-  components: { Pics }
+  components: { Pics, Header }
 };
 </script>
 

@@ -1,12 +1,14 @@
 <template>
   <main>
-    <section>
+    <section class="section">
       <!-- pics -->
-      <div class="pictures-container"></div>
+      <div class="pictures-container">
+        <img v-for="picture in pictures" :key="picture.id" :src="picture.src.large" class="picture" />
+      </div>
       <!-- end of pics -->
 
       <!-- loading icon -->
-      <div v-if="pictures.length === 0" class="loading">
+      <div v-if="pictures.length === 0" class="loading-container">
         <div class="lds-ring">
           <div></div>
           <div></div>
@@ -27,13 +29,34 @@ export default {
       pictures: []
     };
   },
-  created() {
-    console.log(process.env.VUE_APP_API_KEY);
+  async created() {
+    const params = {
+      method: "GET",
+      headers: {
+        Authorization: process.env.VUE_APP_API_KEY
+      }
+    };
+    const page = Math.floor(Math.random() * Math.floor(500)); //random page 0-500
+    const url = `https://api.pexels.com/v1/curated/?page=${page}&per_page=9`;
+    try {
+      const response = await fetch(url, params);
+      const data = await response.json();
+      this.pictures = data.photos;
+    } catch (error) {
+      console.log(error);
+    }
+    //console.log(process.env.VUE_APP_API_KEY);
   }
 };
 </script>
 
 <style scoped>
+.loading-container {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /* laoding animation */
 .lds-ring {
   display: inline-block;
@@ -70,6 +93,28 @@ export default {
     transform: rotate(360deg);
   }
 }
-
 /**/
+.section {
+  padding-top: 20px;
+}
+.pictures-container {
+  min-height: calc(100vh - 88px);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+.picture {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+.picture:hover {
+  opacity: 0.6;
+}
 </style>

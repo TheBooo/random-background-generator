@@ -3,7 +3,13 @@
     <section class="section">
       <!-- pics -->
       <div class="pictures-container">
-        <img v-for="picture in pictures" :key="picture.id" :src="picture.src.large" class="picture" />
+        <img
+          v-for="(picture, i) in pictures"
+          :key="picture.id"
+          :src="picture.src.large"
+          @click="openPicture(i)"
+          class="picture"
+        />
       </div>
       <!-- end of pics -->
 
@@ -18,23 +24,33 @@
       </div>
       <!-- end of loading icon -->
     </section>
+    <SinglePicture v-if="picture !== ''" v-bind:picture="picture" />
   </main>
 </template>
 
 <script>
+import SinglePicture from "./SinglePicture";
+
 export default {
   name: "Pics",
+  components: { SinglePicture },
   data() {
     return {
-      pictures: []
+      pictures: [],
+      picture: "",
     };
+  },
+  methods: {
+    openPicture(i) {
+      this.picture = this.pictures[i];
+    },
   },
   async created() {
     const params = {
       method: "GET",
       headers: {
-        Authorization: process.env.VUE_APP_API_KEY
-      }
+        Authorization: process.env.VUE_APP_API_KEY,
+      },
     };
     const page = Math.floor(Math.random() * Math.floor(500)); //random page 0-500
     const url = `https://api.pexels.com/v1/curated/?page=${page}&per_page=9`;
@@ -46,7 +62,7 @@ export default {
       console.log(error);
     }
     //console.log(process.env.VUE_APP_API_KEY);
-  }
+  },
 };
 </script>
 

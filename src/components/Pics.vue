@@ -24,7 +24,7 @@
       </div>
       <!-- end of loading icon -->
     </section>
-    <SinglePicture v-if="picture !== ''" v-bind:picture="picture" />
+    <SinglePicture v-if="picture !== ''" v-bind:picture="picture" v-on:closeOverlay="closeOverlay" />
   </main>
 </template>
 
@@ -43,6 +43,9 @@ export default {
   methods: {
     openPicture(i) {
       this.picture = this.pictures[i];
+    },
+    closeOverlay() {
+      this.picture = "";
     },
   },
   async created() {
